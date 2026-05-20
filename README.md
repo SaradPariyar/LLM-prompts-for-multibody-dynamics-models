@@ -1,8 +1,7 @@
 # LLM-prompts-for-multibody-dynamics-models
-LLM prompts using zero-shot, structured and RAG methods for generating Exudyn mechanical models.
-
-Simple Pendulum
-Zero-shot Prompt
+# LLM prompts using zero-shot, structured and RAG methods for generating Exudyn mechanical models.
+# Simple Pendulum
+# Zero-shot Prompt
 Generate a complete and executable Python script using Exudyn to simulate the following simple pendulum model.
 
 Target model:
