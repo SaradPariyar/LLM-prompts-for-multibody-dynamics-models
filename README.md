@@ -28,7 +28,8 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-Structured Prompt
+
+# Structured Prompt
 Generate a complete and executable Python script using Exudyn to simulate the following simple pendulum model.
 
 Target model:
@@ -71,7 +72,8 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-RAG Prompt
+
+# RAG Prompt
 You are given a verified Exudyn reference example for a simple pendulum:
 
 [  from __future__ import annotations
@@ -286,8 +288,9 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-Double Pendulum
-Zero-shot Prompt
+
+# Double Pendulum
+# Zero-shot Prompt
 Generate a complete and executable Python script using Exudyn to simulate the following double pendulum model.
 
 Target model:
@@ -321,7 +324,8 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-Structured Prompt
+
+# Structured Prompt
 Generate a complete and executable Python script using Exudyn to simulate the following double pendulum model.
 
 Target model:
@@ -375,7 +379,8 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-RAG Prompt
+  
+# RAG Prompt
 You are given a verified Exudyn reference example for a double pendulum or closely related multibody system:
 
 [ from __future__ import annotations
@@ -634,8 +639,9 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-Mass-Spring-Damper System
-Zero-shot Prompt
+
+# Mass-Spring-Damper System
+# Zero-shot Prompt
 Generate a complete and executable Python script using Exudyn to simulate the following mass-spring-damper system.
 
 Target model:
@@ -665,7 +671,8 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-Structured Prompt
+
+# Structured Prompt
 Generate a complete and executable Python script using Exudyn to simulate the following mass-spring-damper system.
 
 Target model:
@@ -705,7 +712,8 @@ Use the following fixed simulation parameters:
 - The script must be fully executable from a clean Python file
 - Include all required imports
 - Do not use pseudocode
-RAG Prompt
+
+# RAG Prompt
 You are given a verified Exudyn reference example for a spring-damper oscillator:
 
 [  import exudyn as exu
