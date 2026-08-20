@@ -73,7 +73,7 @@ Use the following fixed simulation parameters:
 - Include all required imports
 - Do not use pseudocode
 EOF
-RAG Prompt
+EXAMPLE-AUGMENTED Prompt
 cat << 'EOF' > prompt.txt
 You are given a verified Exudyn reference example for a simple pendulum:
 
@@ -301,7 +301,7 @@ Use the following fixed simulation parameters:
 - Include all required imports
 - Do not use pseudocode
 EOF
-RAG Prompt
+EXAMPLE-AUGMENTED Prompt
 cat << 'EOF' > prompt.txt
 You are given a verified Exudyn reference example for a double pendulum or closely related multibody system:
 
@@ -481,7 +481,7 @@ Use the following fixed simulation parameters:
 - Include all required imports
 - Do not use pseudocode
 EOF
-RAG Prompt
+EXAMPLE-AUGMENTED Prompt
 cat << 'EOF' > prompt.txt
 You are given a verified Exudyn reference example for a spring-damper oscillator:
 
@@ -713,7 +713,7 @@ Use the following fixed simulation parameters:
 EOF
 
 
-RAG Prompt
+EXAMPLE-AUGMENTED Prompt
 
 cat << 'EOF' > prompt.txt
 You are given a verified Exudyn reference example for a multi-arm system actuated by hydraulic cylinders containing internal pressure dynamics:
