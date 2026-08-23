@@ -608,7 +608,7 @@ Single-Arm Hydraulic Boom
 Zero-shot Prompt
 
 cat << 'EOF' > prompt.txt
-Generate a complete and executable Python script using Exudyn to simulate a single-arm hydraulic boom system.
+Generate a complete and executable Python script using Exudyn to simulate the following single-arm hydraulic boom system.
 
 Target model:
 - Ground object located at [0, 0, 0]
@@ -623,7 +623,7 @@ Target model:
   - Ground point: [0, -0.3, 0]
   - Arm connection point: local coordinates [-0.25, -0.05, 0] relative to the arm's center of mass
 - Hydraulic system parameters:
-  - Oil volume / Hose volume for both chambers: 1.0 m^3
+  - Oil volume / hose volume for both chambers: 1.0 m^3
   - Piston area for both sides: 0.01 m^2
   - Oil bulk modulus: 1e12 Pa
   - Nominal flow rate: 2e-5 m^3/s
@@ -631,11 +631,14 @@ Target model:
   - Tank pressure: 0 bar
   - Actuator damping: 2e5 Ns/m
 - Actuator internal pressure dynamics:
-  - Modeled using a first-order ODE node (2 coordinates for the two chambers)
-  - Initial pressures initialized to 20 bar (2e6 Pa) for both chambers
-- Valve control trajectory implemented via a pre-step user function:
-  - Target distance trajectory: x = (max(0.5, min(1.5, (1 - cos(t * pi * 2 * 0.5)))) - 0.5) * 0.15 + LH0 (where LH0 is the initial actuator length)
-  - Valve openings are updated every step based on a proportional control factor of 2.0 scaling the error between target distance and current actuator distance: valveOpening0 = (x - current_distance) * 2, valveOpening1 = -valveOpening0
+  - Two pressure states
+  - Initial pressures: 2e6 Pa for both chambers
+- Valve control trajectory:
+  - Target actuator distance:
+    x = (max(0.5, min(1.5, (1 - cos(t * pi * 2 * 0.5)))) - 0.5) * 0.15 + LH0
+  - Valve openings:
+    valveOpening0 = (x - current_distance) * 2
+    valveOpening1 = -valveOpening0
 
 Output:
 - Export a CSV file named hydraulic_boom_results.csv
@@ -653,10 +656,11 @@ Use the following fixed simulation parameters:
 - Do not use pseudocode
 EOF
 
+Single-Arm Hydraulic Boom
 Structured Prompt
 
 cat << 'EOF' > prompt.txt
-Generate a complete and executable Python script using Exudyn to simulate a single-arm hydraulic boom system.
+Generate a complete and executable Python script using Exudyn to simulate the following single-arm hydraulic boom system.
 
 Target model:
 - Ground object located at [0, 0, 0]
@@ -670,31 +674,39 @@ Target model:
 - Actuated by a simple hydraulic cylinder (HydraulicActuatorSimple) connected between:
   - Ground point: [0, -0.3, 0]
   - Arm connection point: local coordinates [-0.25, -0.05, 0] relative to the arm's center of mass
-- Hydraulic system parameters:
-  - Oil volume / Hose volume for both chambers: 1.0 m^3
-  - Piston area for both sides: 0.01 m^2
-  - Oil bulk modulus: 1e12 Pa
-  - Nominal flow rate: 2e-5 m^3/s
-  - System pressure: 200 bar (2e7 Pa)
-  - Tank pressure: 0 bar
-  - Actuator damping: 2e5 Ns/m
 
 STRICT EXUDYN REQUIREMENTS:
-- Use ObjectGround for the ground body
-- Use NodeRigidBody2D and RigidBody2D for the moving arm
-- Use MarkerBodyPosition for creating connection points on the ground and the arm body
-- Use RevoluteJoint2D to connect the ground marker and the arm support marker
-- Apply gravity using Force with loadVector=[0, -mass*gravity, 0] attached to a marker at the center of mass
-- Use NodeGenericODE1 with 2 coordinates to represent the internal pressures, with initialCoordinates=[2e6, 2e6]
-- Use HydraulicActuatorSimple to define the cylinder, passing the ground marker, arm marker, and the ODE1 node
-- Compute the initial actuator length dynamically as LH0 = sqrt(2 * (0.25)**2) or via the vector distance between the markers
-- Implement the valve control trajectory inside a Python function passed to mbs.SetPreStepUserFunction(PreStepUserFunction):
-  - Retrieve current actuator distance using mbs.GetObjectOutput(actuatorObject, variableType=exu.OutputVariableType.Distance)
-  - Compute target trajectory: target_x = (max(0.5, min(1.5, (1 - cos(t * pi * 2 * 0.5)))) - 0.5) * 0.15 + LH0
-  - Update parameters "valveOpening0" and "valveOpening1" on the actuator object using mbs.SetObjectParameter
-- Use SensorObject to record actuator Force and Distance
-- Use SensorNode to record the chamber pressure Coordinates from the NodeGenericODE1 node
-- Retrieve sensor data fields using mbs.GetSensorStoredData to format the final table
+- Use ObjectGround for the ground object
+- Use NodeRigidBody2D and RigidBody2D for the arm
+- Use MarkerBodyPosition for the ground, arm pivot and hydraulic-cylinder connection points
+- Use RevoluteJoint2D for the arm-ground connection
+- Apply gravity using Force at the arm center of mass
+- Use NodeGenericODE1 with two coordinates for the hydraulic pressure states
+- Initialize the pressure states with [2e6, 2e6]
+- Use HydraulicActuatorSimple for the hydraulic cylinder
+- Determine the initial actuator length from the marker positions
+- Use a PreStepUserFunction for the valve control
+- Retrieve the current actuator distance during the simulation
+- Update valveOpening0 and valveOpening1 using the actuator distance error
+- Use SensorObject to record actuator force and actuator distance
+- Use SensorNode to record the two chamber pressures
+- Retrieve the stored sensor data using mbs.GetSensorStoredData
+
+Hydraulic system parameters:
+- Oil volume / hose volume for both chambers: 1.0 m^3
+- Piston area for both sides: 0.01 m^2
+- Oil bulk modulus: 1e12 Pa
+- Nominal flow rate: 2e-5 m^3/s
+- System pressure: 200 bar (2e7 Pa)
+- Tank pressure: 0 bar
+- Actuator damping: 2e5 Ns/m
+
+Valve control:
+- Target actuator distance:
+  x = (max(0.5, min(1.5, (1 - cos(t * pi * 2 * 0.5)))) - 0.5) * 0.15 + LH0
+- Valve openings:
+  valveOpening0 = (x - current_distance) * 2
+  valveOpening1 = -valveOpening0
 
 Output:
 - Export a CSV file named hydraulic_boom_results.csv
@@ -704,6 +716,8 @@ Use the following fixed simulation parameters:
 - Simulation time: 30 s
 - Step size: 0.001 s
 - Set simulationSettings.timeIntegration.newton.useModifiedNewton = True
+- Solver relative tolerance: 1e-6
+- Solver absolute tolerance: 1e-10
 - Do not open the Exudyn renderer/viewer
 - Do not include plots
 - Export only the required CSV file
@@ -712,11 +726,10 @@ Use the following fixed simulation parameters:
 - Do not use pseudocode
 EOF
 
-
 EXAMPLE-AUGMENTED Prompt
 
 cat << 'EOF' > prompt.txt
-You are given a verified Exudyn reference example for a multi-arm system actuated by hydraulic cylinders containing internal pressure dynamics:
+You are given a verified Exudyn reference example for a hydraulic multibody system:
 [
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
@@ -981,19 +994,39 @@ mbs.PlotSensor(sensorNumbers=[sPressures]*2+[sPressures2]*2, components=[0,1,0,1
 Using the provided reference example, generate a complete and executable Python script for the target model described below.
 
 Target model:
-- Modify the system to have only a single arm (eliminate the second arm/link and its corresponding second actuator completely)
-- Ground point located at [0, 0, 0]
+- Ground object located at [0, 0, 0]
 - One rigid arm modeled in the x-y plane:
   - Length: 1.0 m, Width: 0.1 m
   - Center of mass reference position: [0.5, 0, 0]
   - Total mass: 120.0 kg
   - Rotational inertia: 10.0 kg*m^2
-- Arm 1 connection to ground and gravity must follow the design configuration of the reference example's arm 1
-- Actuated by a single simple hydraulic cylinder (HydraulicActuatorSimple) connected exactly using the local offset measurements defined for arm 1 in the reference example
-- Maintain the exact same hydraulic parameters (V0, A, Eoil, Qn, pS, pT, damping) and ODE1 pressure initialization settings for the remaining cylinder
-- Adapt the PreStepUserFunction so that it only processes and applies the tracking control corrections to the single actuator
+- The arm is connected to the ground at the origin using a 2D revolute joint at the arm's local position [-0.5, 0, 0]
+- Gravity: 9.81 m/s^2 acting in the negative y-direction at the center of mass
+- Actuated by a simple hydraulic cylinder (HydraulicActuatorSimple) connected between:
+  - Ground point: [0, -0.3, 0]
+  - Arm connection point: local coordinates [-0.25, -0.05, 0] relative to the arm's center of mass
 
-Use the reference example only as guidance for correct Exudyn API usage, object properties, user function control interface, and execution structure.
+- Hydraulic system parameters:
+  - Oil volume / hose volume for both chambers: 1.0 m^3
+  - Piston area for both sides: 0.01 m^2
+  - Oil bulk modulus: 1e12 Pa
+  - Nominal flow rate: 2e-5 m^3/s
+  - System pressure: 200 bar (2e7 Pa)
+  - Tank pressure: 0 bar
+  - Actuator damping: 2e5 Ns/m
+
+- Actuator internal pressure dynamics:
+  - Modeled using a first-order ODE node with 2 coordinates for the two chambers
+  - Initial pressures: 2e6 Pa for both chambers
+
+- Valve control trajectory implemented via a pre-step user function:
+  - Target distance:
+    x = (max(0.5, min(1.5, (1 - cos(t * pi * 2 * 0.5)))) - 0.5) * 0.15 + LH0
+  - Valve openings:
+    valveOpening0 = (x - current_distance) * 2
+    valveOpening1 = -valveOpening0
+
+Use the reference example only as guidance for correct Exudyn API usage and program structure.
 
 Output:
 - Export a CSV file named hydraulic_boom_results.csv
@@ -1002,7 +1035,7 @@ Output:
 Use the following fixed simulation parameters:
 - Simulation time: 30 s
 - Step size: 0.001 s
-- Set simulationSettings.timeIntegration.newton.useModifiedNewton = True
+- Solver tolerances: relative tolerance = 1e-6, absolute tolerance = 1e-10
 - Do not open the Exudyn renderer/viewer
 - Do not include plots
 - Export only the required CSV file
