@@ -1026,8 +1026,6 @@ Target model:
     valveOpening0 = (x - current_distance) * 2
     valveOpening1 = -valveOpening0
 
-Use the reference example only as guidance for correct Exudyn API usage and program structure.
-
 Output:
 - Export a CSV file named hydraulic_boom_results.csv
 - CSV columns: time, actuator_force, actuator_distance, p0, p1
